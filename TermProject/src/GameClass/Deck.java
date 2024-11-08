@@ -1,3 +1,4 @@
+package t1_1;
 package GameClass;
 
 import java.util.ArrayList;
@@ -19,12 +20,16 @@ public class Deck {
         }
         Collections.shuffle(cards); // 카드 섞기
     }
-
+    
+    //카드 섞기
+    public void shuffle() {
+    	Collections.shuffle(cards); 
+    }
+    //덱에서 한 장의 카드 뽑는 함수
     public Card drawCard() {
         if (cards.isEmpty()) {
             return null; // 카드가 없을 경우
         }
-        return cards.remove(cards.size() - 1); // 마지막 카드를 뽑음
+        return cards.remove(0); //덱에서 첫 번째 카드 반환하고 제거
     }
 }
-
