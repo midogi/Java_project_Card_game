@@ -1,4 +1,4 @@
-package t1_1;
+package GameClass;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

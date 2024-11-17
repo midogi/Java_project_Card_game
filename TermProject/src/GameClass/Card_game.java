@@ -1,4 +1,5 @@
-package t1_1;
+package GameClass;
+
 import java.util.List;
 
 public interface Card_game {

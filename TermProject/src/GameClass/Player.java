@@ -1,4 +1,3 @@
-package t1_1;
 package GameClass;
 
 import java.util.ArrayList;

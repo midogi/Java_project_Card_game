@@ -1,7 +1,7 @@
-package t1_1;
+package GameClass;
 
-import t1_1.Deck;
-import t1_1.Player;
+import GameClass.Deck;
+import GameClass.Player;
 
 public class Black_Jack {
 	private Deck deck;
