@@ -85,7 +85,19 @@ public class MainLobby extends JFrame {
 
         // 블랙잭 버튼
         JButton blackjackButton = createButton("블랙잭");
-        blackjackButton.addActionListener(e -> JOptionPane.showMessageDialog(null, "블랙잭 실행 준비 중!"));
+        blackjackButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(null, "블랙잭 실행 준비 중!");
+            SwingUtilities.invokeLater(() -> {
+                //블랙잭 GUI 화면을 생성
+                makeBlackJackGUI blackjackGame = new makeBlackJackGUI();
+                mainPanel.add(blackjackGame, "블랙잭");
+
+                //블랙잭 화면으로 전환
+                cardLayout.show(mainPanel, "블랙잭");
+                chatArea.append("게임 시작!\n");
+
+            });
+        });
         gameSelectionPanel.add(blackjackButton);
 
         // 인디언 포커 버튼
