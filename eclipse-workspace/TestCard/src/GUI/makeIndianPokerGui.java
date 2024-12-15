@@ -6,7 +6,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.Random;
 
-public class makeIndianPokerGui extends JPanel {
+public class makeIndianPokerGui extends JFrame {
     private JLabel playerCard;  // ai카드
     private JLabel opponentCard;  // 내카드
     private JSpinner betAmountSpinner;  // betAmountSpinner를 클래스 필드로 선언
@@ -33,12 +33,23 @@ public class makeIndianPokerGui extends JPanel {
     
 
     public makeIndianPokerGui() {
-        setLayout(new BorderLayout());
+    	setLayout(new BorderLayout());
         setBackground(new Color(80, 30, 30)); // 전체 배경색 설정
-       
+        setTitle("인디언 포커");
+        setSize(800, 800);  // 원하는 크기로 설정
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  // 창 닫을 때 게임 종료
+        setLocationRelativeTo(null);  // 창을 화면 중앙에 띄움
+        
+        // 게임 UI 초기화 (예: 패널, 버튼 등 추가)
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout()); // 패널의 레이아웃 설정
+        // 여기에 실제 게임 UI 패널 추가
+        add(panel, BorderLayout.CENTER);  // panel을 JFrame에 추가
+
         // 상단 카드와 사용자 이름
         JPanel cardPanel = new JPanel(new GridLayout(1, 2));
         cardPanel.setBackground(new Color(80, 30, 30)); // 상단 패널 배경색
+        panel.add(cardPanel, BorderLayout.NORTH);  // 카드 패널을 게임 패널에 추가
         
         aiCardNum = new Random().nextInt(10) + 1; 
       

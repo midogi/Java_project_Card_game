@@ -33,22 +33,37 @@ public class MainLobby extends JFrame {
         setLayout(new BorderLayout());
         getContentPane().setBackground(new Color(80, 30, 30)); // 배경색 설정
 
+        // mainPanel과 cardLayout 초기화
+        cardLayout = new CardLayout();
+        mainPanel = new JPanel(cardLayout);
+
+        // mainPanel을 JFrame에 추가
+        add(mainPanel, BorderLayout.CENTER);
+
+        // 초기 UI 설정
         initializeUI();
+
         setVisible(true);
     }
 
+
     private void initializeUI() {
+        // 기존의 UI 요소 추가 (배경, 버튼 등)
         loadBackgroundImage();
         addLobbyButtons();
         addUserInfo();
         addGameSelectionButtons();
     }
 
+
     private void loadBackgroundImage() {
-        JLabel backgroundLabel = new JLabel(new ImageIcon(getClass().getResource(IMAGE_PATH)));
+        JLabel backgroundLabel = new JLabel();
         backgroundLabel.setLayout(new BorderLayout());
         add(backgroundLabel, BorderLayout.NORTH);
+      
+        
     }
+    
 
     private void addLobbyButtons() {
         JPanel buttonPanel = new JPanel();
@@ -93,7 +108,7 @@ public class MainLobby extends JFrame {
         gameSelectionPanel.setLayout(new GridLayout(3, 1, 10, 10));
         gameSelectionPanel.setBackground(new Color(80, 30, 30));
         gameSelectionPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.ORANGE), "게임 선택", 0, 0, new Font("SansSerif", Font.BOLD, 18), Color.YELLOW));
-        JPanel chatPanel = new JPanel();
+
         // 블랙잭 버튼
         JButton blackjackButton = createButton("블랙잭");
         blackjackButton.addActionListener(e -> {
@@ -107,56 +122,45 @@ public class MainLobby extends JFrame {
         // 인디언 포커 버튼
         JButton indianPokerButton = createButton("인디언 포커");
         indianPokerButton.addActionListener(e -> {
-            SwingUtilities.invokeLater(() -> {
-                // 인디언 포커 GUI 화면을 생성
-                makeIndianPokerGui indianGame = new makeIndianPokerGui();
-                mainPanel.add(indianGame, "인디언 포커");
+            // "인디언 포커" 창을 새로 띄우기
+            makeIndianPokerGui indianGame = new makeIndianPokerGui();
+            // 인디언 포커 게임 창을 보이게 설정
+            indianGame.setVisible(true);
 
-                // "인디언 포커" 화면으로 전환
-                cardLayout.show(mainPanel, "인디언 포커");
-                
-                // Betting 버튼 동작 설정
-                indianGame.getResultButton().addActionListener(ev -> handleBetting(indianGame,indianGame.getAiCardNum()));
-                //Give 버튼 동작 설정
-                indianGame.getFoldButton().addActionListener(event -> {
-                    // 1. 내 칩 1개 차감하고, AI 칩 1개 증가
-                    indianGame.meLoseChip(1);
-                    indianGame.aiWinnerChip(1);
+            // Betting 버튼 동작 설정
+            indianGame.getResultButton().addActionListener(ev -> handleBetting(indianGame, indianGame.getAiCardNum()));
 
-                    // 2. 내 카드 공개 (카드 이미지 변경)
-                    int playerCardValue = new Random().nextInt(10) + 1; // 내 카드 값
-                    indianGame.showCardImage(playerCardValue);
+            // Fold 버튼 동작 설정
+            indianGame.getFoldButton().addActionListener(event -> {
+                indianGame.meLoseChip(1);
+                indianGame.aiWinnerChip(1);
+                int playerCardValue = new Random().nextInt(10) + 1;
+                indianGame.showCardImage(playerCardValue);
+                indianGame.updateChips(indianGame.getMyChips(), indianGame.getAiChips());
+                indianGame.updateChat("포기하셨습니다. 칩 1개를 잃습니다!\n");
+            });
 
-                    // 칩 정보 업데이트
-                    indianGame.updateChips(indianGame.getMyChips(), indianGame.getAiChips());
-                    indianGame.updateChat("포기하셨습니다. 칩 1개를 잃습니다!\n");
-                });
-                
-               
-                
-                indianGame.getContinueButton().addActionListener(event -> {
-                    indianGame.updateChat("새 라운드를 시작합니다.");
-                    int aiCardValue = new Random().nextInt(10) + 1;
-                    indianGame.settingAiCardNum(aiCardValue);
-                    indianGame.aiShowCardImage(aiCardValue);
-                    indianGame.cardReset();
-                    indianGame.updateChat("새로운 카드를 뽑았습니다.");
+            // Continue 버튼 동작 설정
+            indianGame.getContinueButton().addActionListener(event -> {
+                indianGame.updateChat("새 라운드를 시작합니다.");
+                int aiCardValue = new Random().nextInt(10) + 1;
+                indianGame.settingAiCardNum(aiCardValue);
+                indianGame.aiShowCardImage(aiCardValue);
+                indianGame.cardReset();
+                indianGame.updateChat("새로운 카드를 뽑았습니다.");
 
-                    // 칩 상태 확인은 라운드가 끝난 후 실행
-                    if (indianGame.checkAiChip() || indianGame.checkPlayerChip()) {
-                        int choice = JOptionPane.showConfirmDialog(null, "게임이 종료되었습니다. 다시 시작하시겠습니까?", "게임 종료", JOptionPane.YES_NO_OPTION);
-
-                        if (choice == JOptionPane.YES_OPTION) {
-                            indianGame.resetGame();
-                        } else {
-                            System.exit(0);
-                        }
+                if (indianGame.checkAiChip() || indianGame.checkPlayerChip()) {
+                    int choice = JOptionPane.showConfirmDialog(null, "게임이 종료되었습니다. 다시 시작하시겠습니까?", "게임 종료", JOptionPane.YES_NO_OPTION);
+                    if (choice == JOptionPane.YES_OPTION) {
+                        indianGame.resetGame();
+                    } else {
+                        System.exit(0);
                     }
-                });
-                
-                
+                }
             });
         });
+
+
         gameSelectionPanel.add(indianPokerButton);
 
         // 원카드 버튼
@@ -170,6 +174,7 @@ public class MainLobby extends JFrame {
 
         add(gameSelectionPanel, BorderLayout.CENTER);
     }
+
 
     private JButton createButton(String text) {
         JButton button = new JButton(text);
